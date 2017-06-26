@@ -30,7 +30,8 @@ class ThorinObject(object):
     def update_transform(self, ref_frame, object_name, translation, rotation):
         self.ref_frame = str(ref_frame)
         self.object_name = str(object_name)
-        self.transform = [self.ref_frame, self.object_name, translation, rotation]
+        # self.transform = [self.ref_frame, self.object_name, translation, rotation]
+        self.transform = [self.ref_frame, self.get_short_name(), translation, rotation]
 
     def get_marker(self):
         marker = Marker()
@@ -154,10 +155,11 @@ class ObjectStatePublisher(object):
     def publish_object_frames(self):
         for object_id, thorin_object in self.objects.items():
             ref_frame, object_frame, translation, rotation = thorin_object.transform
+            # print(object_frame)
             self.tf_broadcaster.sendTransform(translation,
                                               rotation,
                                               rospy.Time.now(),
-                                              thorin_object.object_name,
+                                              object_frame,
                                               ref_frame)
 
     def loop(self):
